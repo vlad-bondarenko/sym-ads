@@ -1,0 +1,18 @@
+<tr class="<#if site.paused>error<#else>success</#if>">
+    <td>
+        Name: ${name}<br/>
+        Description: ${desc}<br/>
+        Link: <a href="${url}" target="_blank">${url}</a><br/>
+        Category: ${category}<br/>
+    </td>
+    <td>
+        Link size per page: ${linkSize}<br/>
+        Separator: <input type="text" disabled="disabled" value="${separator}" minlength="5" maxlength="5"/><br/>
+        Length text: ${length}<br/>
+    </td>
+    <td>
+        <a href="/admin/site-history.html?id=${id}"><img src="/static/img/information.png" alt="History"
+                                                         title="History of clicks"/></a>
+        <a href="/admin/site.html?delete=${id}"><img src="/static/img/ico_del.gif" alt="Delete" title="Delete"/></a>
+    </td>
+</tr>

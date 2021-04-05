@@ -1,0 +1,15 @@
+allprojects {
+    repositories {
+        mavenLocal()
+        jcenter()
+    }
+}
+
+subprojects {
+    group 'sym-ads'
+    version = '1.0.0-SNAPSHOT'
+}
+
+repositories {
+    jcenter()
+}

@@ -1,0 +1,125 @@
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+repositories {
+    mavenLocal()
+
+    jcenter()
+}
+
+test {
+    useJUnitPlatform()
+}
+
+jar {
+    manifest {
+        attributes(
+                'Implementation-Title': project.name,
+                'Implementation-Version': project.version,
+
+                'Built-By': System.properties['user.name'],
+                'Build-Timestamp': DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(LocalDateTime.now()),
+                'Created-By': "Gradle ${gradle.gradleVersion}",
+                'Build-Jdk': "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})",
+                'Build-OS': "${System.properties['os.name']} ${System.properties['os.arch']} ${System.properties['os.version']}"
+        )
+    }
+}
+
+sourceSets {
+    integrationTest {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+        java {
+            srcDirs = ['src/integrationTest/java']
+        }
+        resources {
+            srcDirs = ['src/integrationTest/resources']
+        }
+    }
+}
+configurations {
+    integrationTestImplementation.extendsFrom implementation
+    integrationTestRuntimeOnly.extendsFrom runtimeOnly
+}
+task integrationTest(type: Test) {
+    description = 'Runs integration tests.'
+    group = 'verification'
+
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    shouldRunAfter test
+}
+
+check.dependsOn integrationTest
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+
+            pom {
+                name = 'Symbol core library'
+                description = 'Core library for all services'
+                url = 'https://bitbucket.org/saves/nem-ads'
+
+                properties = [
+                        "myProp": "value",
+                        "prop.with.dots": "anotherValue"
+                ]
+
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'vbondarenko'
+                        name = 'Vladyslav Bondarenko'
+                        email = 'bondarenko.vlad@gmail.com'
+                    }
+                }
+            }
+        }
+    }
+
+    repositories {
+        mavenLocal()
+    }
+}
+
+dependencies {
+    api group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.14.1'
+    api group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.14.1'
+    api group: 'org.apache.logging.log4j', name: 'log4j-jcl', version: '2.14.1'
+    api group: 'com.lmax', name: 'disruptor', version: '3.4.2'
+
+    api(group: 'ru.odnoklassniki', name: 'one-nio', version: '1.3.2') {
+        exclude group: 'log4j', module: 'log4j'
+    }
+
+    api group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.0.1'
+    api group: 'org.rocksdb', name: 'rocksdbjni', version: '6.16.4'
+
+    api group: 'io.nem', name: 'symbol-sdk-okhttp-client', version: '1.0.0'
+
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.7.7'
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.7.0'
+    testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.7.0'
+
+    integrationTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.7.0'
+    integrationTestRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.7.0'
+}

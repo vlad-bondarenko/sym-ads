@@ -1,0 +1,22 @@
+<tr class="<#if site.paused>error<#else>success</#if>">
+    <td>
+        Name: ${name}<br/>
+        Description: ${desc}<br/>
+        Link: <a href="${url}" target="_blank">${url}</a><br/>
+        Category: ${category}<br/>
+    </td>
+    <td>
+        Price: ${price}<br/>
+        Country: ${country}<br/>
+        From hour: ${fromHour}<br/>
+        To hour: ${toHour}<br/>
+        From week: ${fromWeek}<br/>
+        To week: ${toWeek}<br/>
+        BL: ${bl}<br/>
+    </td>
+    <td>
+        <a href="/admin/ad-history.html?id=${id}"><img src="/static/img/information.png" alt="History"
+                                                       title="History of clicks"/></a>
+        <a href="/admin/ad.html?delete=${id}"><img src="/static/img/ico_del.gif" alt="Delete" title="Delete"/></a>
+    </td>
+</tr>

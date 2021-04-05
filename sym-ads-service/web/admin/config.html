@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Config</title>
+</head>
+<body>
+<br>
+<br>
+<a href="/admin/index.html">Start page</a>
+<br>
+<br>
+<form method="post" accept-charset="utf-8">
+    <fieldset>
+        <legend>New config</legend>
+        <p>
+            <label>Id <em>*</em></label>
+            <select name="id" required>
+                <option disabled>--Please select--</option>
+                <option value="other">Other</option>
+                <option value="category">Category</option>
+            </select>
+        </p>
+        <p>
+            <label>Values (name=value long=3434 long2=-4545 double=4.5 double2=-0.545) <em>*</em></label>
+            <textarea name="values" placeholder="name=value" cols="50" rows="10" maxlength="1000" required></textarea>
+        </p>
+    </fieldset>
+    <p>
+        <input type="submit">
+        <input type="reset">
+    </p>
+</form>
+
+</body>
+</html>

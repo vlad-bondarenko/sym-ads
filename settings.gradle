@@ -1,0 +1,5 @@
+rootProject.name = 'sym-ads'
+
+include 'sym-ads-core'
+include 'sym-ads-web'
+include 'sym-ads-service'

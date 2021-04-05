@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Site</title>
+</head>
+<body>
+<br>
+Service account TBBWTX-U6F7MV-MLGNWO-AQEF7W-EHJAQF-ZA5VUK-Q3I
+<br>
+Advertiser account TBMXGJ-BJL5J3-H5FERJ-ICOGYE-ACH6KQ-4VG32D-BLQ
+<br>
+Webmaster account TD24RP-F7DZSD-CGW5KA-IN3TUN-7QP5WR-JTYULE-XHA
+<br>
+Mosaic id 3366A1575178D6B3
+<br>
+<br>
+<br>
+<a href="/admin/index.html">Start page</a>
+<br>
+<br>
+<form method="post" accept-charset="utf-8">
+    <fieldset>
+        <legend>Site settings</legend>
+        <p>
+            <label>Name <em>*</em></label>
+            <input type="text" name="name" placeholder="Name" value="" required>
+        </p>
+        <p>
+            <label>Description <em>*</em></label>
+            <input type="text" name="desc" placeholder="Description" value="" required>
+        </p>
+        <p>
+            <label>URL <em>*</em></label>
+            <input type="url" name="url" placeholder="http://sample.com" value="" required>
+        </p>
+        <p>
+            <label>Category <em>*</em></label>
+            <select name="category" required>
+                <option disabled>--Please select--</option>
+                ${list.category}
+            </select>
+        </p>
+        <p>
+            <label>Link size <em>*</em></label>
+            <input type="number" name="linkSize" value="5" required>
+        </p>
+        <p>
+            <label>Separator <em>*</em></label>
+            <input type="text" name="separator" placeholder="br" value="" required>
+        </p>
+        <p>
+            <label>Length text <em>*</em></label>
+            <input type="number" name="length" value="10" required>
+        </p>
+    </fieldset>
+    <p>
+        <input type="submit">
+        <input type="reset">
+    </p>
+</form>
+
+</body>
+</html>

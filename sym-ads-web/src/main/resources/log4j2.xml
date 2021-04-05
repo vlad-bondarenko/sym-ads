@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Don't forget to set system property
+-DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector
+     to make all loggers asynchronous. -->
+
+<Configuration status="WARN" shutdownHook="disable">
+    <Properties>
+        <Property name="logDir">log</Property>
+
+        <!--
+                        <Pattern>%d %p %c{1.} [%t] %m %ex%n</Pattern>
+        -->
+        <Property name="logPattern">%d %p %c [%t] %m%n</Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout>
+                <Pattern>${logPattern}</Pattern>
+            </PatternLayout>
+        </Console>
+
+        <RollingRandomAccessFile name="rootFile" fileName="${logDir}/root.log"
+                                 filePattern="${logDir}/$${date:yyyy-MM}/root-%d{yyyy-MM-dd}-%i.log.gz" append="true">
+            <PatternLayout>
+                <Pattern>${logPattern}</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="250 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="20"/>
+        </RollingRandomAccessFile>
+
+        <RollingRandomAccessFile name="errorFile" fileName="${logDir}/error.log"
+                                 filePattern="${logDir}/$${date:yyyy-MM}/error-%d{yyyy-MM-dd}-%i.log.gz" append="true">
+            <PatternLayout>
+                <Pattern>${logPattern}</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="250 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="20"/>
+            <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+        </RollingRandomAccessFile>
+    </Appenders>
+
+    <Loggers>
+        <AsyncLogger name="nem.ads" includeLocation="false" level="debug"/>
+        <AsyncLogger name="org.apache.http" includeLocation="false" level="info"/>
+        <AsyncLogger name="io.netty" includeLocation="false" level="info"/>
+
+        <AsyncRoot level="debug" includeLocation="false">
+            <AppenderRef ref="STDOUT"/>
+            <AppenderRef ref="rootFile"/>
+            <AppenderRef ref="errorFile"/>
+        </AsyncRoot>
+    </Loggers>
+</Configuration>

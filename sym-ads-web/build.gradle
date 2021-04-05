@@ -1,0 +1,44 @@
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+
+plugins {
+    id 'java'
+    id 'application'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+jar {
+    manifest {
+        attributes(
+                'Implementation-Title': project.name,
+                'Implementation-Version': project.version,
+                'Main-Class': 'sym.ads.web.NemAdsServer',
+
+                'Built-By': System.properties['user.name'],
+                'Build-Timestamp': DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(LocalDateTime.now()),
+                'Created-By': "Gradle ${gradle.gradleVersion}",
+                'Build-Jdk': "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})",
+                'Build-OS': "${System.properties['os.name']} ${System.properties['os.arch']} ${System.properties['os.version']}"
+        )
+    }
+}
+
+dependencies {
+    implementation project(':sym-ads-core')
+}
+
+applicationDistribution.from("web") {
+    into "web"
+}
+
+application {
+    mainClass.set("sym.ads.web.SymAdsServer")
+}
+
+test {
+    useJUnitPlatform()
+}
