@@ -1,0 +1,27 @@
+Using Symbol platform only.
+
+The architecture Sym-Ad has 2 servers:
+1. Service provider server for admin operations, exchange SYM to mosaic and reverse. This server startup admin (owner mosaic and project).
+2. Client server for Advertiser or Webmaster (or both, dual role). This server startup public users only.
+
+Workflow for Advertisers.
+1. Exchange SYM to mosaic with admin panel.
+2. Create configuration (name, category, link, price, targeting and etc.) for Ads and store to blockchain (send message to owner of namespace).
+3. After click to Ad link and redirect to Ad page, app server receive request. This request handled and save to local db.
+4. Audit clicks with admin panel and reject click if it is bad. View and mark bad clicks with local db. Available of manually approved and sent reward is now.
+5. After 2 days of audit clicks, other valid clicks automatic with background handled and request transaction for send mocais to owner.The request to mosaic owner (service provider) for  a transaction signature from the advertiser and create the Aggregate transaction for exchange mosaic to SYM and send SYM to Webmaster (before started Nem-Ad server need configure exchange rate and stored to blockchain).
+
+Workflow for Webmaster.
+1. Create configuration (name, category, link size, separator, business level and etc.) for contextual ad of site and store to blockchain (send message to owner of namespace).
+2. Every 15 min create auction ads and prepare data for rendering of site.
+3. User click to ad link and redirected to Advertiser site. This click save to local db.
+4. Received reward SYM for valid clicks after audit of Advertiser or after 2 days timeout.
+
+
+Both admin panels for Advertiser and Webmaster can view history clicks (datetime, ip, link, geo and etc.). It is also possible to add sites to the blacklist locally or to the blockchain.
+
+Service provider server of mosaic owner.
+This server to exchanges mosaic to SYM or reverse. Configuration of server saved and updating with blockchain (exchange rate, public url for connecting and etc.).
+This service receives a request from the advertiser's application in the form of a signed transactions and creates an aggregated transaction itself and sends it to the blockchain. At the same time, the advertiser does not pay a commission.
+
+Exchange operation mosaic to SYM and reverse will be admin panel only.
