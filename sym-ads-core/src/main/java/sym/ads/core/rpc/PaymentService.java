@@ -10,7 +10,7 @@ import sym.ads.core.rpc.model.Result;
 
 public interface PaymentService {
 
-    Result<String> payment(byte[] paymentBytes);
+    byte[] payment(byte[] paymentBytes);
 
-    Result<String> confirm(String hash, byte[] cosignatureSignedTransactionBytes);
+    byte[] confirm(String hash, byte[] cosignatureSignedTransactionBytes);
 }

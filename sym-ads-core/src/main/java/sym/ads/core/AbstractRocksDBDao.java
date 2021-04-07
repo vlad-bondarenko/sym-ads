@@ -1,16 +1,16 @@
 package sym.ads.core;
 
-import one.nio.serial.Json;
-import one.nio.serial.JsonReader;
 import org.rocksdb.ColumnFamilyHandle;
 import org.rocksdb.RocksDB;
 import org.rocksdb.RocksDBException;
 import org.rocksdb.RocksIterator;
 
+import java.nio.charset.StandardCharsets;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import static one.nio.util.Utf8.toBytes;
+import static sym.ads.core.Utils.GSON;
 
 /**
  * Created by bondarenko.vlad@gmail.com on 26.10.18.
@@ -44,7 +44,7 @@ public abstract class AbstractRocksDBDao<K extends Comparable<K>, V> extends Bas
     protected abstract byte[] getColumnFamilyName();
 
     public void put(K key, V value) throws Exception {
-        db.put(columnFamilyHandle, toBytesFunction.apply(key), toBytes(Json.toJson(value)));
+        db.put(columnFamilyHandle, toBytesFunction.apply(key), toBytes(GSON.toJson(value)));
     }
 
     public V get(K key) throws Exception {
@@ -53,7 +53,7 @@ public abstract class AbstractRocksDBDao<K extends Comparable<K>, V> extends Bas
             return null;
         }
 
-        return new JsonReader(bytes).readObject(type);
+        return GSON.fromJson(new String(bytes, StandardCharsets.UTF_8), type);
     }
 
     public void delete(K key) throws Exception {
@@ -64,7 +64,7 @@ public abstract class AbstractRocksDBDao<K extends Comparable<K>, V> extends Bas
         RocksIterator iter = db.newIterator(columnFamilyHandle);
         iter.seekToFirst();
         while (iter.isValid()) {
-            biConsumer.accept(fromBytesFunction.apply(iter.key()), new JsonReader(iter.value()).readObject(type));
+            biConsumer.accept(fromBytesFunction.apply(iter.key()), GSON.fromJson(new String(iter.value(), StandardCharsets.UTF_8), type));
 
             iter.next();
         }
@@ -84,7 +84,7 @@ public abstract class AbstractRocksDBDao<K extends Comparable<K>, V> extends Bas
                         break;
                 }
 
-                biConsumer.accept(key, new JsonReader(iter.value()).readObject(type));
+                biConsumer.accept(key, GSON.fromJson(new String(iter.value(), StandardCharsets.UTF_8), type));
 
                 iter.next();
             }

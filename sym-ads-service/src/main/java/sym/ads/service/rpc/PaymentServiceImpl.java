@@ -43,11 +43,11 @@ public class PaymentServiceImpl extends BaseClass implements PaymentService {
     }
 
     @Override
-    public Result<String> payment(byte[] paymentBytes) {
+    public byte[] payment(byte[] paymentBytes) {
         try {
             Payment payment = GSON.fromJson(new String(paymentBytes, StandardCharsets.UTF_8), Payment.class);
             if (isBlank(payment.getServerId()) || isBlank(payment.getAdId()) || isBlank(payment.getRecipient()) || isBlank(payment.getPublicKey()) || payment.getAmount() == null || payment.getAmount().compareTo(BigInteger.ONE) < 0) {
-                return new Result<>(null, -1, "Not valid: " + payment.toString());
+                return GSON.toJson(new Result<>(null, -1, "Not valid: " + payment)).getBytes(StandardCharsets.UTF_8);
             }
 
             String mosaicId = (String) configs.get(CONFIG_SERVICE_MOSAIC_ID);
@@ -78,25 +78,25 @@ public class PaymentServiceImpl extends BaseClass implements PaymentService {
 
             AGGREGATE_TRANSACTION_MAP.put(hash, aggregateTransaction);
 
-            return new Result<>(hash, 0, null);
+            return GSON.toJson(new Result<>(hash, 0, null)).getBytes(StandardCharsets.UTF_8);
         } catch (Exception e) {
             log.error(e.toString(), e);
 
-            return new Result<>(null, 255, e.toString());
+            return GSON.toJson(new Result<>(null, 255, e.toString())).getBytes(StandardCharsets.UTF_8);
         }
     }
 
     @Override
-    public Result<String> confirm(String hash, byte[] cosignatureSignedTransactionBytes) {
+    public byte[] confirm(String hash, byte[] cosignatureSignedTransactionBytes) {
         if (isBlank(hash)) {
-            return new Result<>(null, -1, "Not valid hash: " + hash);
+            return GSON.toJson(new Result<>(null, -1, "Not valid hash: " + hash)).getBytes(StandardCharsets.UTF_8);
         }
 
         try {
             AggregateTransaction aggregateTransaction = AGGREGATE_TRANSACTION_MAP.get(hash);
 
             if (aggregateTransaction == null) {
-                return new Result<>(null, -1, "Not found aggregateTransaction for hash: " + hash);
+                return GSON.toJson(new Result<>(null, -1, "Not found aggregateTransaction for hash: " + hash)).getBytes(StandardCharsets.UTF_8);
             }
 
             CosignatureSignedTransaction cosignatureSignedTransaction = GSON.fromJson(new String(cosignatureSignedTransactionBytes, StandardCharsets.UTF_8), CosignatureSignedTransaction.class);
@@ -108,14 +108,14 @@ public class PaymentServiceImpl extends BaseClass implements PaymentService {
             if (Objects.equals(hash, hashNew)) {
                 AGGREGATE_TRANSACTION_MAP.remove(hash);
 
-                return new Result<>(hash, 0, null);
+                return GSON.toJson(new Result<>(hash, 0, null)).getBytes(StandardCharsets.UTF_8);
             }
 
-            return new Result<>(null, -1, "Not announce CosignatureSignedTransaction for hash: " + hash);
+            return GSON.toJson(new Result<>(null, -1, "Not announce CosignatureSignedTransaction for hash: " + hash)).getBytes(StandardCharsets.UTF_8);
         } catch (Exception e) {
             log.error(e.toString(), e);
 
-            return new Result<>(null, 255, e.toString());
+            return GSON.toJson(new Result<>(null, 255, e.toString())).getBytes(StandardCharsets.UTF_8);
         }
     }
 }

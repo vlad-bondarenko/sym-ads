@@ -344,6 +344,7 @@ public final class AdvertiserService extends BaseClass implements Consumer<Block
         payment();
     }
 
+    @SuppressWarnings("unchecked")
     public Response payment() {
         if (StateService.getInstance().getServiceUrl() == null) {
             return new Response(Response.INTERNAL_ERROR);
@@ -369,7 +370,8 @@ public final class AdvertiserService extends BaseClass implements Consumer<Block
 
                         final Payout payout = payoutDao.get(surf.getId());
                         if (payout == null) {
-                            Result<String> paymentResult = paymentService.payment(GSON.toJson(new Payment(StateService.getInstance().getServerId(), surf.getId(), symConnector.rootPublicAccount.getAddress().plain(), BigInteger.valueOf(ad.getPrice()), symConnector.account.getPublicKey())).getBytes(StandardCharsets.UTF_8));
+//                            Result<String> paymentResult = paymentService.payment(GSON.toJson(new Payment(StateService.getInstance().getServerId(), surf.getId(), symConnector.rootPublicAccount.getAddress().plain(), BigInteger.valueOf(ad.getPrice()), symConnector.account.getPublicKey())).getBytes(StandardCharsets.UTF_8));
+                            Result<String> paymentResult = GSON.fromJson(new String(paymentService.payment(GSON.toJson(new Payment(StateService.getInstance().getServerId(), surf.getId(), "TD24RP-F7DZSD-CGW5KA-IN3TUN-7QP5WR-JTYULE-XHA", BigInteger.valueOf(ad.getPrice()), symConnector.account.getPublicKey())).getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8), Result.class);
 
                             log.debug("paymentResult: {}", paymentResult);
 
@@ -386,7 +388,7 @@ public final class AdvertiserService extends BaseClass implements Consumer<Block
 
                                 byte[] cosignatureSignedTransactionBytes = json.getBytes(StandardCharsets.UTF_8);
 
-                                Result<String> confirmResult = paymentService.confirm(hash, cosignatureSignedTransactionBytes);
+                                Result<String> confirmResult = GSON.fromJson(new String(paymentService.confirm(hash, cosignatureSignedTransactionBytes), StandardCharsets.UTF_8), Result.class);
 
                                 log.debug("confirmResult: {}", paymentResult);
 
