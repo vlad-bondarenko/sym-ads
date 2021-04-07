@@ -369,7 +369,7 @@ public final class AdvertiserService extends BaseClass implements Consumer<Block
 
                         final Payout payout = payoutDao.get(surf.getId());
                         if (payout == null) {
-                            Result<String> paymentResult = paymentService.payment(new Payment(StateService.getInstance().getServerId(), surf.getId(), symConnector.rootPublicAccount.getAddress().plain(), BigInteger.valueOf(ad.getPrice()), symConnector.account.getPublicKey()));
+                            Result<String> paymentResult = paymentService.payment(GSON.toJson(new Payment(StateService.getInstance().getServerId(), surf.getId(), symConnector.rootPublicAccount.getAddress().plain(), BigInteger.valueOf(ad.getPrice()), symConnector.account.getPublicKey())).getBytes(StandardCharsets.UTF_8));
 
                             log.debug("paymentResult: {}", paymentResult);
 

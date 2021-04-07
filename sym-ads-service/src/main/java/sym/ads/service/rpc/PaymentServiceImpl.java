@@ -43,8 +43,9 @@ public class PaymentServiceImpl extends BaseClass implements PaymentService {
     }
 
     @Override
-    public Result<String> payment(Payment payment) {
+    public Result<String> payment(byte[] paymentBytes) {
         try {
+            Payment payment = GSON.fromJson(new String(paymentBytes, StandardCharsets.UTF_8), Payment.class);
             if (isBlank(payment.getServerId()) || isBlank(payment.getAdId()) || isBlank(payment.getRecipient()) || isBlank(payment.getPublicKey()) || payment.getAmount() == null || payment.getAmount().compareTo(BigInteger.ONE) < 0) {
                 return new Result<>(null, -1, "Not valid: " + payment.toString());
             }
